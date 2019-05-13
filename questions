@@ -14,6 +14,24 @@ step 4: what filters need to be included?  --- where or having
         WHERE is used when filtering on a dimension, such as GENDER. HAVING is used when filtering on an aggregation, such as SUM 
 step 5: Any ordering or limiting needed?  Order By or Limit         
         
+        
+Planning the SELECT statement
+When setting up queries, it is important to use the correct aggregations for fields. A common mistake is to incorrectly set up a ratio. In this exercise, your goal is to create a report that shows the ratio of nobel_prize_winners and pop_in_millions.
+
+Which of the following SELECT statements would sufficiently create this report?
+
+
+SELECT AVG(nobel_prize_winners/pop_in_millions)
+
+SELECT SUM(nobel_prize_winners)/SUM(pop_in_millions)  --- ANSWER
+
+SELECT SUM(nobel_prize_winners/pop_in_millions)
+
+SELECT MAX(nobel_prize_winners/pop_in_millions) - MIN(nobel_prize_winners/pop_in_millions)
+
+   
+        
+        
 
 
 
