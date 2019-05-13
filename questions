@@ -3,3 +3,18 @@ How should we combine the tables?
 what fields do we need to create?
 what filters need to be included? 
 Any ordering or limiting needed? 
+
+
+----------------------------------------------------------------------------------------
+
+step 1:  What tables do we need to pull from?  --- create a diagram and highlight the relevant fields by table
+step 2: How should we combine the tables?  ---  unions or joins
+step 3: what fields do we need to create? --- static string, conditional and/or aggr
+step 4: what filters need to be included?  --- where or having
+        WHERE is used when filtering on a dimension, such as GENDER. HAVING is used when filtering on an aggregation, such as SUM 
+step 5: Any ordering or limiting needed?  Order By or Limit         
+        
+
+
+
+
