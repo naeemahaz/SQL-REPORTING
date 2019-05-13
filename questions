@@ -29,6 +29,9 @@ SELECT SUM(nobel_prize_winners/pop_in_millions)
 
 SELECT MAX(nobel_prize_winners/pop_in_millions) - MIN(nobel_prize_winners/pop_in_millions)
 
+
+
+Since HAVING filters after aggregations, filtering on AVG(age) would not work since it filters out entire events instead of individual athletes.
    
         
         
