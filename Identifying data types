@@ -1,9 +1,13 @@
 Identifying data types
-Being able to identify data types before setting up your query can help you plan for any potential issues. There is a group of tables, or a schema, called the information_schema, which provides a wide array of information about the database itself, including the structure of tables and columns.
+Being able to identify data types before setting up your query can help you plan for any potential issues. 
+There is a group of tables, or a schema, called the information_schema, which provides a wide array of 
+information about the database itself, including the structure of tables and columns.
 
 The columns table houses useful details about the columns, including the data type.
 
-Note that the information_schema is not the default schema SQL looks at when querying, which means you will need to explicitly tell SQL to pull from this schema. To pull a table from a non-default schema, use the syntax schema_name.table_name.
+Note that the information_schema is not the default schema SQL looks at when querying, which means you will 
+need to explicitly tell SQL to pull from this schema. To pull a table from a non-default schema, use the syntax 
+schema_name.table_name.
 
 Select the fields column_name and data_type from the table columns that resides within the information_schema schema.
 Filter only for the 'country_stats' table.
@@ -20,9 +24,11 @@ WHERE table_name = 'country_stats';
 
 
 Interpreting error messages
-Inevitably, you will run into errors when running SQL queries. It is important to understand how to interpret these errors to correctly identify what type of error it is.
+Inevitably, you will run into errors when running SQL queries. It is important to understand how to interpret 
+these errors to correctly identify what type of error it is.
 
-The console contains two separate queries, each which will output an error when ran. In this exercise, you will run each query, read the error message, and troubleshoot the error.
+The console contains two separate queries, each which will output an error when ran. In this exercise, 
+you will run each query, read the error message, and troubleshoot the error.
 
 -- Run the query, then convert a data type to fix the error
 SELECT AVG(CAST(pop_in_millions AS float)) AS avg_population
@@ -55,6 +61,38 @@ JOIN winter_games_str AS w
 -- Fix the error by making both columns integers
 ON CAST(s.country_id AS INT) = CAST(w.country_id AS INT)
 GROUP BY s.country_id;
+
+
+Using date functions on strings
+There are several useful functions that act specifically on date or datetime fields. For example:
+
+DATE_TRUNC('month', date) truncates each date to the first day of the month.
+DATE_PART('year', date) outputs the year, as an integer, of each date value.
+In general, the arguments for both functions are ('period', field), where period is a date or 
+time interval, such as 'minute', 'day', or 'decade'.
+
+In this exercise, your goal is to test out these date functions on the country_stats table, 
+specifically by outputting the decade of each year using two separate approaches. To run these 
+functions, you will need to use CAST() function on the year field.
+
+
+Pulling from the country_stats table, select the decade using two methods: DATE_PART() and DATE_TRUNC.
+Convert the data type of the year field to fix errors.
+Sum up gdp to get world_gdp.
+Group and order by year (in descending order).
+
+
+
+SELECT 
+	year,
+    -- Pull decade, decade_truncate, and the world's gdp
+    DATE_PART(____) AS decade,
+    DATE_TRUNC(____) AS decade_truncated,
+    ____ AS world_gdp
+FROM ____
+-- Group and order by year in descending order
+GROUP BY ____
+ORDER BY ____;
 
 
 
