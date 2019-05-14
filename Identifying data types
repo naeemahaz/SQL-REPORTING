@@ -17,3 +17,27 @@ FROM information_schema.columns
 -- Filter for the table 'country_stats'
 WHERE table_name = 'country_stats';
 
+
+
+Interpreting error messages
+Inevitably, you will run into errors when running SQL queries. It is important to understand how to interpret these errors to correctly identify what type of error it is.
+
+The console contains two separate queries, each which will output an error when ran. In this exercise, you will run each query, read the error message, and troubleshoot the error.
+
+-- Run the query, then convert a data type to fix the error
+SELECT AVG(CAST(pop_in_millions AS float)) AS avg_population
+FROM country_stats;
+
+/*SELECT 
+	s.country_id, 
+    COUNT(DISTINCT s.athlete_id) AS summer_athletes, 
+    COUNT(DISTINCT w.athlete_id) AS winter_athletes
+FROM summer_games AS s
+JOIN winter_games_str AS w
+ON s.country_id = w.country_id
+GROUP BY s.country_id;*/
+
+
+
+
+
