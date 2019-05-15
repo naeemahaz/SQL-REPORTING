@@ -322,6 +322,77 @@ GROUP BY c.country, pop_in_millions
 ORDER BY medals_per_million DESC
 LIMIT 25;
 
+--------------------------------------------------------------------------
+Testing out window functions
+Window functions reference other rows within the report. There are a variety of window-specific functions to use, but all basic aggregation functions can be used as a window function. These include:
+
+SUM()
+AVG()
+MAX()
+MIN()
+The syntax of a window function is FUNCTION(value) OVER (PARTITION BY field ORDER BY field). Note that the PARTITION BY and ORDER BY clauses are optional. The FUNCTION should be replaced with the function of your choice.
+
+In this exercise, you will run a few different window functions on the country_stats table.
+
+Add the field country_avg_gdp that outputs the average gdp for each country.
+
+partition by == range of calculation 
+order by == order of rows when running calculation 
+
+sum(value) over (partition by field order by field) 
+
+****Total bronze medals
+sum(bronze) over() as total_broze 
+from summer_games
+
+**** country bronze medals 
+sum(bronze) over (partition by country_id) as total_bronze 
+from summer_games 
+
+Lag()
+Lead()
+
+
+Row_number()
+Rank()
+------------------------------------------------------------------------------------
+
+Window function on an aggregation 
+
+select 
+team_id,
+sum(points) as team_points,
+sum(sum(points)) over () as league_points 
+from original_table 
+group by team_id 
+
+-----------------------------------------------------------------------------
+
+Layered Calculations 
+* Aggregate an existing aggregation 
+* Leverages a subquery 
+
+Layered calculations example 
+step 1: total bronze medals per country 
+select country_id, sum(bronze) as bronze_medals 
+from summer_games 
+group by country_id 
+
+step 2: convert to subquery and take the max 
+select max(bronze_medals) 
+from 
+(select country_id, sum(bronze) as bronze_medals
+from summer_games
+group by country_id) as subquery 
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
