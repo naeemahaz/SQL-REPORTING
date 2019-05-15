@@ -483,7 +483,24 @@ Performance index
   
   
   
+  --------------------------------------------------------------------------------------------------------------
   
+  Rolling 7 days 
+  
+  month-over-month comparison 
+  LAG(value, offset) outputs a value from an offset number of rows previous to the current row. 
+  
+  LEAD(value, offset) outputs a value from an offset number of rows after the current row.  
+  
+  
+  step 1: show revenue by month 
+  select 
+  Date_part('month', date) as month,
+  sum(revenue) as current_rev 
+  from original_table 
+  Group by month; 
+  
+  step 2: previ
   
    
 
