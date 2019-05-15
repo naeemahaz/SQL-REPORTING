@@ -420,6 +420,73 @@ sum(points)/ sum(points) over () as perc_of_total
 from basketball_points 
 group by team_id 
 
+--------------------------------------------------------------------------
+Percent of total calculation 
+Perfect of points scored per player for each item: 
+
+select player_id,
+team_id,
+sum(points) as points 
+sum(points) / (sum(points) over (partition by team_id)) as perc_of_team
+from basketball_points 
+group by player_id, team_id 
+
+
+------------------------------------------------------------------------------------
+Efficiency metrics 
+  does not scale with size 
+  typically a ratio 
+  
+
+Performance index 
+   compares performance to a benchmark 
+   benchmark typically an average or median 
+  
+  
+  basketball_summary table 
+  
+  team_id	games	points
+  1		24	782
+  2		20	625
+  3		12	487
+  
+  points per game performance?
+  
+  step 1: points per game for each team 
+  select 
+  team_id, 
+  points/games as team_ppg
+  from basketball_summary; 
+  
+  step 2: points per game for entire league 
+  select 
+  team_id, 
+  points/games as team_ppg, 
+  sum(points) over() / sum(games) over() as league_ppg 
+  from basketball_summary
+  
+  step 3: performance index 
+  select 
+  team_id,
+  point/games as team_ppg,
+  sum(points) over () / sum(games) over () as league_ppg,
+  (points/games) / (sum(points) over () / sum(games) over ()) as perf_index 
+  from basketball_summary 
+  
+  team_id	team_ppg	league_ppg	perf_index
+  1		32.6		33.8		0.96
+  2		31.3		33.8		0.92
+  3		40.6		33.8		1.20
+  
+  * the results clearly state that team three scores 20% more points than the league average. 
+  
+  
+  
+  
+  
+  
+   
+
 
 
 
