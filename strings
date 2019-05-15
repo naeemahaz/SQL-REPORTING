@@ -386,6 +386,43 @@ from summer_games
 group by country_id) as subquery 
 
 -------------------------------------------------------------------------------
+Types of metrics 
+
+Volume metrics and Efficiency metrics 
+
+** Volume metrics - scale with size 
+Percent of total calculation 
+
+select team_id, sum(points) as points 
+from basketball_points 
+group by team_id 
+
+
+
+
+
+Percent of total calculation 
+
+step 1: calculate total 
+
+select 
+team_id, 
+sum(points) as points 
+sum(points over () as total_points 
+from basketball_points 
+group by team_id 
+
+step 2: calculate percent of total 
+select 
+team_id, 
+sum(points) as points 
+sum(points)/ sum(points) over () as perc_of_total 
+from basketball_points 
+group by team_id 
+
+
+
+
 
 
 
