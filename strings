@@ -500,7 +500,78 @@ Performance index
   from original_table 
   Group by month; 
   
-  step 2: previ
+  step 2: previous month's revenue 
+  select 
+  date_part('month', date) as month, 
+  sum(revenue) as current_rev, 
+  Lag(sum(revenue)) over (order by date_part('month', date)) as prev_rev 
+  from original_table 
+  group by month
+  
+  step 3: percent change calculation 
+  select 
+  date_part('month', date) as month, 
+  sum(revenue) as current_rev,
+  lag(sum(revenue)) over (order by date_part('month', date)) as prev_rev, 
+  sum(revenue) / lag(sum(revenue)) over (order by date_part('month', date))-1 as perc_change 
+  from original_table 
+  group by month; 
+  
+  month-over-month comparison 
+  step 3: percent change calculation 
+  
+  month		current_rev		prev_rev		perc_change
+  01		15000			null			null
+  02		14000			12000			-.06
+  03		21000			14000			.50
+  
+  *we can clearly see from the results that we dropped 6% revenue in February and increased 50% revenue in March 
+  -----------------------------------------------------------------------------------------------------------------------
+  
+  
+  Rolling calculations 
+  only take into account 7 rows 
+  
+  New clause: rows between 
+  
+  sum(value) over (order by value Rows between n preceding and current row) 
+  
+  ----------------------------------------------------------------------------------------------------------------------
+  
+  Rolling calculations 
+  
+  rolling sum query 
+  
+  select 
+  date, 
+  sum(sum(revenue)) over 
+  (order by date rows between 6 preceding and current row) as weekly_revenue 
+  from original_table 
+  group by date;
+  
+  date		country_id		view 
+  2018-01-01	1			24313
+  2018-01-01	2			3768
+  2018-01-01	3			26817
+  
+  
+  
+  fixing data types --- cast()
+  
+  parsing strings 
+  
+  handling nulls - coalesce() 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
    
 
