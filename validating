@@ -1,0 +1,17 @@
+/* Pull total_bronze_medals from summer_games below
+SELECT SUM(bronze) AS total_bronze_medals
+FROM summer_games; 
+>> OUTPUT = 141 total_bronze_medals */
+
+-- Select the total bronze_medals from your query
+SELECT SUM(bronze_medals)
+FROM 
+-- Previous query is shown below.  Alias this AS subquery.
+  (SELECT 
+      country, 
+      SUM(bronze) AS bronze_medals
+  FROM summer_games AS s
+  JOIN countries AS c
+  ON s.country_id = c.id
+  GROUP BY country) AS subquery
+;
