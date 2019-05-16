@@ -72,9 +72,9 @@ ORDER BY events DESC;
 
 SELECT 
 	sport,
-    CASE WHEN weight/height^2*100 <.25 THEN '<.25'
-    WHEN weight/height^2*100 <=.30 THEN '.25-.30'
-    WHEN weight/height^2*100 >.30 THEN '>.30'
+    CASE WHEN 100*weight/height^2<.25 THEN '<.25'
+    WHEN 100*weight/height^2 <=.30 THEN '.25-.30'
+    WHEN 100*weight/height^2 >.30 THEN '>.30'
     -- Add ELSE statement to output 'no weight recorded'
     ELSE 'no weight recorded' END AS bmi_bucket,
     COUNT(DISTINCT athlete_id) AS athletes
