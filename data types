@@ -1,0 +1,42 @@
+-- Pull column_name & data_type from the columns table
+SELECT 
+	COLUMN_NAME,
+    data_type
+FROM information_schema.columns
+-- Filter for the table 'country_stats'
+WHERE table_name = 'country_stats';
+
+Great! Using this approach to identify data types can help you plan for potential data type inconsistencies.
+
+
+
+-- Run the query, then convert a data type to fix the error
+SELECT AVG(CAST(pop_in_millions AS float)) AS avg_population
+FROM country_stats;
+
+/*SELECT 
+	s.country_id, 
+    COUNT(DISTINCT s.athlete_id) AS summer_athletes, 
+    COUNT(DISTINCT w.athlete_id) AS winter_athletes
+FROM summer_games AS s
+JOIN winter_games_str AS w
+ON s.country_id = w.country_id
+GROUP BY s.country_id;*/
+
+
+-- Comment out the previous query
+---SELECT avg(CAST(pop_in_millions AS int)) AS avg_population
+----FROM country_stats;
+
+-- Uncomment the following block & run the query
+SELECT 
+	s.country_id, 
+    COUNT(DISTINCT s.athlete_id) AS summer_athletes, 
+    COUNT(DISTINCT w.athlete_id) AS winter_athletes
+FROM summer_games AS s
+JOIN winter_games_str AS w
+-- Fix the error by making both columns integers
+ON cast(s.country_id as int) = cast(w.country_id as int)
+GROUP BY s.country_id;
+
+
