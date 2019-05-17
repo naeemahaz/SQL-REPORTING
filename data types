@@ -40,3 +40,13 @@ ON cast(s.country_id as int) = cast(w.country_id as int)
 GROUP BY s.country_id;
 
 
+SELECT 
+	year,
+    -- Pull decade, decade_truncate, and the world's gdp
+    DATE_PART('decade',CAST(year AS date)) AS decade,
+    DATE_TRUNC('decade',CAST(year AS date)) AS decade_truncated,
+    SUM(gdp) AS world_gdp
+FROM country_stats
+-- Group and order by year in descending order
+GROUP BY year
+ORDER BY year DESC;
