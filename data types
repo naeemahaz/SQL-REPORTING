@@ -50,3 +50,51 @@ FROM country_stats
 -- Group and order by year in descending order
 GROUP BY year
 ORDER BY year DESC;
+------------------------------------------------------------------
+
+-- Convert country to proper case
+SELECT 
+	country, 
+    LOWER(country) AS country_altered
+FROM countries
+GROUP BY country;
+
+String functions
+There are a number of string functions that can be used to alter strings. A description of a few of these functions are shown below:
+
+The LOWER(fieldName) function changes the case of all characters in fieldName to lower case.
+The INITCAP(fieldName) function changes the case of all characters in fieldName to proper case.
+The LEFT(fieldName,N) function returns the left N characters of the string fieldName.
+The SUBSTRING(fieldName from S for N) returns N characters starting from position S of the string fieldName. Note that both from S and for N are optional.
+
+-- Convert country to proper case
+SELECT 
+	country, 
+    INITCAP(country) AS country_altered
+FROM countries
+GROUP BY country;
+
+-- Output all characters starting with position 7
+SELECT 
+	country, 
+    LEFT(country,3) AS country_altered
+FROM countries
+GROUP BY country;
+
+
+-- Output all characters starting with position 7
+SELECT 
+	country, 
+    SUBSTRING(country,7) AS country_altered
+FROM countries
+GROUP BY country;
+
+
+-----------------------------------------------------------
+
+
+
+
+
+
+
