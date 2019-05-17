@@ -91,8 +91,285 @@ GROUP BY country;
 
 
 -----------------------------------------------------------
+Replacing and removing substrings
+The REPLACE() function is a versatile function that allows you to replace or remove characters from a string. The syntax is as follows:
+
+REPLACE(fieldName, 'searchFor', 'replaceWith')
+
+Where fieldName is the field or string being updated, searchFor is the characters to be replaced, and replaceWith is the replacement substring.
+
+In this exercise, you will look at one specific value in the countries table and change up the format by using a few REPLACE() functions.
 
 
+Add a new field called character_swap_and_remove that runs the alterations of both character_swap and character_remove in one go.
+
+
+Great! Setting up queries that show both the original string and the altered string on the same report is a good way to confirm your string functions work as expected.
+
+SELECT 
+	region, 
+    -- Replace all '&' characters with the string 'and'
+    REPLACE(region,'&','and') AS character_swap,
+    -- Remove all periods
+    REPLACE(region,'.','') AS character_remove,
+    -- Combine the functions to run both changes at once
+   REPLACE(REPLACE(region,'.',''), '&', 'and') AS character_swap_and_remove
+FROM countries
+WHERE region = 'LATIN AMER. & CARIB'
+GROUP BY region;
+
+------------------------------------------------------------------------------------------------------
+Exercise
+Exercise
+Fixing incorrect groupings
+One issues with having strings stored in different formats is that you may incorrectly group data. If the same value is represented in multiple ways, your report will split the values into different rows, which can lead to inaccurate conclusions.
+
+In this exercise, you will query from the summer_games_messy table, which is a messy, smaller version of summer_games. You'll notice that the same event is stored in multiple ways. Your job is to clean the event field to show the correct number of rows.
+
+Create a query that pulls the number of distinct athletes by event from the table summer_games_messy.
+Group by the non-aggregated field.
+
+
+
+-- Pull event and unique athletes from summer_games_messy 
+SELECT 
+	event, 
+    count(athlete_id) AS athletes
+FROM summer_games_messy
+-- Group by the non-aggregated field
+GROUP BY event;
+
+
+-- Pull event and unique athletes from summer_games_messy 
+SELECT 
+    -- Remove dashes from all event values
+    REPLACE(TRIM(event), '-', '') AS event_fixed, 
+    COUNT(DISTINCT athlete_id) AS athletes
+FROM summer_games_messy
+-- Update the group by accordingly
+GROUP BY event_fixed;
+
+
+
+-- Show total gold_medals by country
+SELECT 
+	country,
+    SUM(gold) AS gold_medals
+FROM countries
+JOIN winter_games
+ON countries.id = winter_games.country_id
+GROUP BY country
+-- Order by gold_medals in descending order
+ORDER BY gold_medals;
+
+
+
+
+-- Show total gold_medals by country
+SELECT 
+	country, 
+    SUM(gold) AS gold_medals
+FROM winter_games AS w
+JOIN countries AS c
+ON w.country_id = c.id
+-- Removes any row with no gold medals
+WHERE gold IS NOT NULL
+GROUP BY country
+-- Order by gold_medals in descending order
+ORDER BY gold_medals DESC;
+
+Filtering out nulls
+One way to deal with nulls is to simply filter them out. There are two important conditionals related to nulls:
+
+IS NULL is true for any value that is null.
+IS NOT NULL is true for any value that is not null. Note that a zero or a blank cell is not the same as a null.
+These conditionals can be leveraged by several clauses, such as CASE statements, WHERE statements, and HAVING statements. In this exercise, you will learn how to filter out nulls using two separate techniques.
+
+Feel free to reference the E:R Diagram.
+
+Notice how null values appear at the top of the results. Remove these by adding a WHERE statement that filters out all rows with null gold values.
+
+
+
+-- Show total gold_medals by country
+SELECT 
+	country, 
+    SUM(gold) AS gold_medals
+FROM winter_games AS w
+JOIN countries AS c
+ON w.country_id = c.id
+-- Comment out the WHERE statement
+-- WHERE gold IS NOT NULL
+GROUP BY country
+-- Replace WHERE statement with equivalent HAVING statement
+HAVING (SUM(gold)) IS NOT NULL
+-- Order by gold_medals in descending order
+ORDER BY gold_medals DESC;
+
+Nice! The IS NOT NULL and IS NULL conditionals have a number of uses, one of which is filtering out null values.
+--------------------------------------------------------------------
+Fixing calculations with coalesce
+Null values impact aggregations in a number of ways. One issue is related to the AVG() function. By default, the AVG() function does not take into account any null values. However, there may be times when you want to include these null values in the calculation as zeros.
+
+To replace null values with a string or a number, use the COALESCE() function. Syntax is COALESCE(fieldName,replacement), where replacement is what should replace all null instances of fieldName.
+
+This exercise will walk you through why null values can throw off calculations and how to troubleshoot these issues.
+
+Build a report that shows total_events and gold_medals by athlete_id for all summer events, ordered by total_events descending then athlete_id ascending.
+
+
+
+-- Pull events and golds by athlete_id for summer events
+SELECT 
+    athlete_id,
+    COUNT(event) AS total_events, 
+    SUM(gold) AS gold_medals
+FROM summer_games
+GROUP BY athlete_id
+-- Order by total_events descending and athlete_id ascending
+ORDER BY total_events desc, athlete_id asc;
+
+
+
+Fixing calculations with coalesce
+Null values impact aggregations in a number of ways. One issue is related to the AVG() function. By default, the AVG() function does not take into account any null values. However, there may be times when you want to include these null values in the calculation as zeros.
+
+To replace null values with a string or a number, use the COALESCE() function. Syntax is COALESCE(fieldName,replacement), where replacement is what should replace all null instances of fieldName.
+
+This exercise will walk you through why null values can throw off calculations and how to troubleshoot these issues.
+
+Create a field called avg_golds that averages the gold field.
+
+
+-- Pull events and golds by athlete_id for summer events
+SELECT 
+    athlete_id, 
+    -- Add a field that averages the existing gold field
+    AVG(gold) AS avg_golds,
+    COUNT(event) AS total_events, 
+    SUM(gold) AS gold_medals
+FROM summer_games AS s
+GROUP BY athlete_id
+-- Order by total_events descending and athlete_id ascending
+ORDER BY total_events DESC, athlete_id;
+--------------------------------------------
+Fixing calculations with coalesce
+Null values impact aggregations in a number of ways. One issue is related to the AVG() function. By default, the AVG() function does not take into account any null values. However, there may be times when you want to include these null values in the calculation as zeros.
+
+To replace null values with a string or a number, use the COALESCE() function. Syntax is COALESCE(fieldName,replacement), where replacement is what should replace all null instances of fieldName.
+
+This exercise will walk you through why null values can throw off calculations and how to troubleshoot these issues.
+
+
+-- Pull events and golds by athlete_id for summer events
+SELECT 
+    athlete_id, 
+    -- Replace all null gold values with 0
+    AVG(COALESCE(gold, 0)) AS avg_golds,
+    COUNT(event) AS total_events, 
+    SUM(gold) AS gold_medals
+FROM summer_games AS s
+GROUP BY athlete_id
+-- Order by total_events descending and athlete_id ascending
+ORDER BY total_events DESC, athlete_id;
+
+----------------------------------------------------------------
+
+Identifying duplication
+Duplication can happen for a number of reasons, often in unexpected ways. Because of this, it's important to get in the habit of validating your queries to ensure no duplication exists. To validate a query, take the following steps:
+
+Check the total value of a metric from the original table.
+Compare that with the total value of the same metric in your final report.
+If the number from step 2 is larger than step 1, then duplication is likely the culprit. In this exercise, you will go through these steps to identify if duplication exists.
+Setup a query that pulls total gold_medals from the winter_games table.
+
+
+
+
+Exercise
+Identifying duplication
+Duplication can happen for a number of reasons, often in unexpected ways. Because of this, it's important to get in the habit of validating your queries to ensure no duplication exists. To validate a query, take the following steps:
+
+Check the total value of a metric from the original table.
+Compare that with the total value of the same metric in your final report.
+If the number from step 2 is larger than step 1, then duplication is likely the culprit. In this exercise, you will go through these steps to identify if duplication exists.
+
+Comment out the top query after noting the gold_medals value.
+Build a query that shows gold_medals and avg_gdp by country_id, but joins winter_games and country_stats only on the country_id fields.
+
+
+
+-- Comment out the query after noting the gold medal count
+/*SELECT SUM(gold) AS gold_medals
+FROM winter_games;*/
+-- TOTAL GOLD MEDALS: 47 
+
+-- Show gold_medals and avg_gdp by country_id
+SELECT 
+	w.country_id, 
+    SUM(gold) AS gold_medals, 
+    AVG(gdp) AS avg_gdp
+FROM winter_games AS w
+JOIN country_stats AS c
+-- Only join on the country_id fields
+ON c.country_id = w.country_id
+GROUP BY w.country_id;
+
+
+
+-- Comment out the query after noting the gold medal count
+/*SELECT SUM(gold) AS gold_medals
+FROM winter_games;*/
+-- TOTAL GOLD MEDALS: 47 
+
+-- Calculate the total gold_medals in your query
+SELECT sum(subquery.gold_medals) as gold_medals
+FROM
+	(SELECT 
+        w.country_id, 
+     	SUM(gold) AS gold_medals, 
+        AVG(gdp) AS avg_gdp
+    FROM winter_games AS w
+    JOIN country_stats AS c
+    ON c.country_id = w.country_id
+    -- Alias your query as subquery
+    GROUP BY w.country_id) AS subquery;
+
+
+
+-- Comment out the query after noting the gold medal count
+/*SELECT SUM(gold) AS gold_medals
+FROM winter_games;*/
+-- TOTAL GOLD MEDALS: 47 
+
+-- Calculate the total gold_medals in your query
+SELECT SUM(gold_medals)
+FROM
+	(SELECT 
+     	w.country_id, 
+     	SUM(gold) AS gold_medals, 
+     	AVG(gdp) AS avg_gdp
+    FROM winter_games AS w
+    JOIN country_stats AS c
+    ON c.country_id = w.country_id
+    -- Alias your query as subquery
+    GROUP BY w.country_id) AS subquery;
+    
+    
+    
+    
+    SELECT SUM(gold_medals) AS gold_medals
+FROM
+	(SELECT 
+     	w.country_id, 
+     	SUM(gold) AS gold_medals, 
+     	AVG(gdp) AS avg_gdp
+    FROM winter_games AS w
+    JOIN country_stats AS c
+    -- Update the subquery to join on a second field
+    ON c.country_id = w.country_id AND w.year = CAST(c.year AS date)
+    GROUP BY w.country_id) AS subquery;
+    
 
 
 
